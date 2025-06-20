@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
+import AnimatedCarousel from "./components/animated-carousel";
+import Header from "./components/header";
 
 const App = () => {
   return (
     <div>
-      <div>
-        <Button>this is home</Button>
-      </div>
+      <Header />
+      <AnimatedCarousel />
     </div>
   );
 };
