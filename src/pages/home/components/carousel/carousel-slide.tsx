@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import CarouselImage from "./carousel-image";
-import type { BlogPost } from "@/types/carousel";
-import { Button } from "../ui/button";
+import type { BlogPost } from "@/types";
+import { Button } from "@/components/ui/button";
 
 interface CarouselSlideProps {
   post: BlogPost;

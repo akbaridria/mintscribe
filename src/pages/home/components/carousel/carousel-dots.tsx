@@ -16,7 +16,7 @@ const CarouselDots: React.FC<CarouselDotsProps> = ({
       {Array.from({ length: totalSlides }).map((_, index) => (
         <motion.button
           key={index}
-          className={`w-3 h-3 transition-colors ${
+          className={`w-2.5 h-2.5 transition-colors ${
             index === currentIndex ? "bg-zinc-800" : "bg-zinc-800/30"
           }`}
           onClick={() => onDotClick(index)}

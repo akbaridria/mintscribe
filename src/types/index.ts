@@ -8,6 +8,7 @@ export interface BlogPost {
   category: string;
   image?: string;
   fallbackColor?: string;
+  content: string;
 }
 
 export interface ExtractedColors {
@@ -17,6 +18,7 @@ export interface ExtractedColors {
     isDark: boolean;
   };
 }
+
 
 export interface ColorData {
   gradient: string;
