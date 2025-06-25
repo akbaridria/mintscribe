@@ -165,14 +165,14 @@ const Article: React.FC<ArticleProps> = ({
 
             <motion.h3
               layoutId={`article-title-${article.id}`}
-              className="text-lg sm:text-xl md:text-2xl font-bold mb-3 md:mb-4 leading-tight"
+              className="text-lg sm:text-xl md:text-2xl font-bold mb-3 md:mb-4 leading-tight line-clamp-2 overflow-hidden text-ellipsis"
             >
               {article.title}
             </motion.h3>
 
             <motion.p
               layoutId={`article-excerpt-${article.id}`}
-              className="text-muted-foreground mb-4 md:mb-6 leading-relaxed text-sm sm:text-base line-clamp-3 md:line-clamp-none"
+              className="text-muted-foreground mb-4 md:mb-6 leading-relaxed text-sm sm:text-base line-clamp-3 overflow-hidden text-ellipsis"
             >
               {article.excerpt}
             </motion.p>
