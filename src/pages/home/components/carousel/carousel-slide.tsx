@@ -1,10 +1,10 @@
 import { motion } from "motion/react";
 import CarouselImage from "./carousel-image";
-import type { BlogPost } from "@/types";
+import type { Article } from "@/types";
 import { Button } from "@/components/ui/button";
 
 interface CarouselSlideProps {
-  post: BlogPost;
+  post: Article;
 }
 
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ post }) => {

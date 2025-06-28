@@ -1,4 +1,4 @@
-export interface BlogPost {
+export interface IArticle {
   id: number;
   title: string;
   excerpt: string;
@@ -19,9 +19,27 @@ export interface ExtractedColors {
   };
 }
 
-
 export interface ColorData {
   gradient: string;
   textColor: string;
   isDark: boolean;
+}
+
+export interface User {
+  name: string;
+  username: string;
+  bio: string;
+  avatar: string;
+  coverImage: string;
+  location: string;
+  joinDate: string;
+  website: string;
+  followers: number;
+  following: number;
+  articles: number;
+  socialLinks: {
+    twitter: string;
+    github: string;
+    linkedin: string;
+  };
 }

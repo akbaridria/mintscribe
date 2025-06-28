@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import Article from "./article";
-import type { BlogPost } from "@/types";
+import type { IArticle } from "@/types";
 import { blogPosts } from "@/data";
 
 export default function ArticlesList() {
-  const [selectedArticle, setSelectedArticle] = useState<BlogPost | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<IArticle | null>(null);
 
-  const handleArticleClick = (article: BlogPost) => {
+  const handleArticleClick = (article: IArticle) => {
     setSelectedArticle(article);
   };
 
@@ -16,7 +16,7 @@ export default function ArticlesList() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="w-full space-y-8">
       <div className="grid gap-8">
         {blogPosts.map((article) => (
           <div key={article.id}>

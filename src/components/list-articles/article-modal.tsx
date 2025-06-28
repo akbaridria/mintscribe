@@ -3,10 +3,10 @@ import { X, Calendar, Clock, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Avatar from "boring-avatars"
-import type { BlogPost } from "@/types"
+import type { IArticle } from "@/types"
 
 interface ArticleModalProps {
-  article: BlogPost | null
+  article: IArticle | null
   isOpen: boolean
   onClose: () => void
 }

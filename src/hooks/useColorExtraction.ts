@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 // @ts-expect-error: No types for colorthief
 import ColorThief from "colorthief";
-import type { BlogPost, ExtractedColors, ColorData } from "../types/carousel";
+import type { Article, ExtractedColors, ColorData } from "../types/carousel";
 
 // Helper function to convert RGB to hex
 const rgbToHex = (r: number, g: number, b: number): string => {
@@ -106,7 +106,7 @@ const createGradientFromColors = (colors: number[][]): ColorData => {
   };
 };
 
-export const useColorExtraction = (blogPosts: BlogPost[]) => {
+export const useColorExtraction = (blogPosts: Article[]) => {
   const [extractedColors, setExtractedColors] = useState<ExtractedColors>({});
   const [isLoadingColors, setIsLoadingColors] = useState(true);
 

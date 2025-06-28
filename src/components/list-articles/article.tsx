@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import Avatar from "boring-avatars";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import type { BlogPost } from "@/types";
+import type { IArticle } from "@/types";
 import { Calendar, Clock, User } from "lucide-react";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
@@ -12,7 +12,7 @@ import { ArticleToolbar } from "./article-toolbar";
 import { LockedContent } from "./locked-content";
 
 interface ArticleProps {
-  article: BlogPost;
+  article: IArticle;
   isExpanded?: boolean;
   onClick?: () => void;
   onClose?: () => void;

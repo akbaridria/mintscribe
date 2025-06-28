@@ -1,6 +1,6 @@
-import type { BlogPost } from "@/types";
+import type { IArticle } from "@/types";
 
-export const blogPosts: BlogPost[] = [
+export const blogPosts: IArticle[] = [
   {
     id: 1,
     title: "Winter Sports Adventures",

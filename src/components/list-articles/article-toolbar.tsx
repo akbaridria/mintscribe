@@ -10,10 +10,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { BlogPost } from "@/types";
+import type { IArticle } from "@/types";
 
 interface ArticleToolbarProps {
-  article: BlogPost;
+  article: IArticle;
   onClose: () => void;
   onViewFullArticle?: () => void;
 }

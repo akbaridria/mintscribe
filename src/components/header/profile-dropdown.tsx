@@ -1,15 +1,15 @@
 import { LogOut, User, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Avatar from "boring-avatars";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+} from "../animate-ui/radix/dropdown-menu";
 
 interface UserProfile {
   name: string;
@@ -104,28 +104,24 @@ const ProfileDropdown = () => {
         </DropdownMenuLabel>
 
         <DropdownMenuItem
-          className="cursor-pointer focus:bg-accent focus:text-accent-foreground mx-1 my-0.5 py-2.5 rounded-sm"
+          className="cursor-pointer mx-1 my-0.5 py-2.5 rounded-sm"
           asChild
         >
-          <a href="/profile">
-            <User className="w-4 h-4 mr-3 text-muted-foreground" />
-            Your Profile
-          </a>
+          <User className="w-4 h-4 mr-3 text-muted-foreground" />
+          <div>Your Profile</div>
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          className="cursor-pointer focus:bg-accent focus:text-accent-foreground mx-1 my-0.5 py-2.5 rounded-sm"
+          className="cursor-pointer mx-1 my-0.5 py-2.5 rounded-sm"
           asChild
         >
-          <a href="/workspace">
-            <Briefcase className="w-4 h-4 mr-3 text-muted-foreground" />
-            Your Workspace
-          </a>
+          <Briefcase className="w-4 h-4 mr-3 text-muted-foreground" />
+          <div>Your Workspace</div>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="cursor-pointer focus:bg-red-50 dark:focus:bg-red-950 focus:text-red-600 dark:focus:text-red-400 mx-1 my-0.5 py-2.5 rounded-sm">
+        <DropdownMenuItem className="cursor-pointer mx-1 my-0.5 py-2.5 rounded-sm">
           <LogOut className="w-4 h-4 mr-3 text-red-500" />
           <span className="text-red-500">Logout</span>
         </DropdownMenuItem>
