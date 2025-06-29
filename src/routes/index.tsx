@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/home";
 import Profile from "@/pages/profile";
 import Search from "@/pages/search";
+import Workspace from "@/pages/workspace";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: <Search />,
+      },
+      {
+        path: "/workspace",
+        element: <Workspace />,
       },
     ],
   },
