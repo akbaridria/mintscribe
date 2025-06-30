@@ -9,7 +9,7 @@ import AboutTab from "./about-tab";
 import ListArticleTab from "./list-article-tab";
 
 interface ProfileTabsProps {
-  user: User;
+  user?: User;
 }
 
 export function ProfileTabs({ user }: ProfileTabsProps) {

@@ -7,39 +7,25 @@ export interface IArticle {
   readTime: string;
   category: string;
   image?: string;
-  fallbackColor?: string;
   content: string;
-}
-
-export interface ExtractedColors {
-  [index: number]: {
-    gradient: string;
-    textColor: string;
-    isDark: boolean;
-  };
-}
-
-export interface ColorData {
-  gradient: string;
-  textColor: string;
-  isDark: boolean;
+  ca?: string;
 }
 
 export interface User {
   name: string;
   username: string;
+  walletAddress: string;
   bio: string;
-  avatar: string;
-  coverImage: string;
-  location: string;
-  joinDate: string;
-  website: string;
-  followers: number;
-  following: number;
-  articles: number;
   socialLinks: {
     twitter: string;
     github: string;
     linkedin: string;
   };
+}
+
+export interface UserDetail {
+  user: User;
+  total_followers: number;
+  total_articles: number;
+  total_following: number;
 }

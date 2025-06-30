@@ -3,29 +3,23 @@ import { EditProfileForm } from "./edit-profile-form";
 import type { User } from "@/types";
 
 interface ProfileHeaderProps {
-  user: User;
-  editedUser: User;
+  user?: User;
   isEditing: boolean;
   isFollowing: boolean;
   onFollowToggle: () => void;
   onEditClick: () => void;
   onSave: (user: User) => void;
   onCancel: () => void;
-  onChange: (field: string, value: string) => void;
-  onSocialChange: (platform: string, value: string) => void;
 }
 
 export function ProfileHeader({
   user,
-  editedUser,
   isEditing,
   isFollowing,
   onFollowToggle,
   onEditClick,
   onSave,
   onCancel,
-  onChange,
-  onSocialChange,
 }: ProfileHeaderProps) {
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden">
@@ -44,11 +38,9 @@ export function ProfileHeader({
               />
             ) : (
               <EditProfileForm
-                user={editedUser}
+                user={user}
                 onSave={onSave}
                 onCancel={onCancel}
-                onChange={onChange}
-                onSocialChange={onSocialChange}
               />
             )}
           </div>

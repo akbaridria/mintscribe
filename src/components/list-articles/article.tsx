@@ -206,7 +206,6 @@ const Article: React.FC<ArticleProps> = ({
                 </div>
               </motion.div>
             </div>
-
             <InteractiveHoverButton
               className="mt-4 md:mt-6 w-full sm:w-auto text-sm sm:text-sm"
               onClick={(e) => {

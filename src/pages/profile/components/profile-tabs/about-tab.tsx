@@ -5,19 +5,19 @@ import type { User } from "@/types";
 import { Twitter, Github, Linkedin } from "lucide-react";
 
 interface AboutTabProps {
-  user: User;
+  user?: User;
 }
 
 const AboutTab: React.FC<AboutTabProps> = ({ user }) => {
   return (
     <Card className="border border-gray-200">
       <CardHeader>
-        <h3 className="text-xl font-bold">About {user.name}</h3>
+        <h3 className="text-xl font-bold">About {user?.name}</h3>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
           <h4 className="font-semibold mb-2">Bio</h4>
-          <p className="text-gray-600 leading-relaxed">{user.bio}</p>
+          <p className="text-gray-600 leading-relaxed">{user?.bio || '-'}</p>
         </div>
 
         <Separator />
