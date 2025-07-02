@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/config"
 import type { Attrs, Node } from "@tiptap/pm/model"
 import type { Editor } from "@tiptap/react"
 
@@ -150,19 +151,43 @@ export const handleImageUpload = async (
     )
   }
 
-  // For demo/testing: Simulate upload progress
-  for (let progress = 0; progress <= 100; progress += 10) {
-    if (abortSignal?.aborted) {
-      throw new Error("Upload cancelled")
+  return new Promise<string>((resolve, reject) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${API_BASE_URL}/file/upload`);
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable && onProgress) {
+        onProgress({ progress: Math.round((event.loaded / event.total) * 100) });
+      }
+    };
+
+    xhr.onload = () => {
+      try {
+        const res = JSON.parse(xhr.responseText);
+        console.log(res);
+        // Adjusted for honojs response structure
+        if (res.success && res.fileUrl) {
+          resolve(res.fileUrl);
+        } else {
+          reject(new Error(res.error || "Upload failed"));
+        }
+      } catch(e) {
+        console.error("Error parsing server response:", e);
+        reject(new Error("Invalid server response"));
+      }
+    };
+
+    xhr.onerror = () => reject(new Error("Network error"));
+
+    if (abortSignal) {
+      abortSignal.addEventListener("abort", () => xhr.abort());
     }
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    onProgress?.({ progress })
-  }
 
-  return "/images/placeholder-image.png"
-
-  // Uncomment for production use:
-  // return convertFileToBase64(file, abortSignal);
+    xhr.send(formData);
+  });
 }
 
 /**

@@ -1,27 +1,38 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { User, UserDetail } from "@/types";
 import {
   useGetUserDetailByAddress,
   useUpdateUserDetailByAddress,
 } from "@/api/query";
 import { useAccount } from "wagmi";
+import { useParams } from "react-router-dom";
 
 export function useProfile() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
+  const [userDetail, setUserDetail] = useState<UserDetail | undefined>(undefined);
+  const { id } = useParams();
 
   const { address } = useAccount();
 
-  const { data, refetch } = useGetUserDetailByAddress(address);
+  const isOwner = useMemo(() => {
+    return address?.toLowerCase() === id?.toLowerCase();
+  }, [address, id])
+
+  const {
+    data,
+    isLoading,
+    refetch,
+  } = useGetUserDetailByAddress(id);
   const { mutateAsync } = useUpdateUserDetailByAddress();
 
   useEffect(() => {
-    setUserDetail(data || null);
+    setUserDetail(data);
   }, [data]);
 
-  const handleSave = async (user: User) => {
-    mutateAsync({ address: address || "", data: user })
+  const handleSave = (user: Partial<User>) => {
+    
+    mutateAsync({ address: address || "", data: {...user, wallet_address: address } })
       .then(() => {
         refetch();
       })
@@ -38,9 +49,12 @@ export function useProfile() {
   };
 
   return {
+    id,
     isFollowing,
     isEditing,
     userDetail,
+    isLoading,
+    isOwner,
     setIsFollowing,
     setIsEditing,
     handleSave,

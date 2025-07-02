@@ -1,5 +1,5 @@
 export interface IArticle {
-  id: number;
+  id: string;
   title: string;
   excerpt: string;
   author: string;
@@ -9,12 +9,12 @@ export interface IArticle {
   image?: string;
   content: string;
   ca?: string;
+  is_published: boolean;
 }
 
 export interface User {
   name: string;
-  username: string;
-  walletAddress: string;
+  wallet_address: string;
   bio: string;
   socialLinks: {
     twitter: string;

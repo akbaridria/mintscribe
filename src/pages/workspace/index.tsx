@@ -1,128 +1,127 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { DocumentSidebar } from "./components/document-sidebar";
 import { EditorHeader } from "./components/editor-header";
-import { Camera, FileText, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  RenderEmptyState,
+  RenderLoadingState,
+} from "./components/empty-and-loading-state";
+import { RenderArticleContent } from "./components/article-content";
+import {
+  useCreateNewArticle,
+  useGetArticleById,
+  useUpdateArticle,
+  useUploadImage,
+} from "@/api/query";
+import { useAccount } from "wagmi";
+import { useParams, useNavigate } from "react-router-dom";
+import type { IArticle } from "@/types";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  getArticleByIdKeys,
+  getListOfArticlesByAddressKeys,
+} from "@/api/constant/query-keys";
 
 const Workspace = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [title, setTitle] = useState("Untitled Article");
   const [isPublished, setIsPublished] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState<string | undefined>(
+    id
+  );
+  const [contentArticle, setContentArticle] = useState<IArticle | undefined>(
+    undefined
+  );
+  const queryClient = useQueryClient();
 
-  // Simulate article selection
-  const handleArticleSelect = (articleId: string) => {
-    setIsLoading(true);
-    setSelectedArticle(articleId);
+  const { address } = useAccount();
 
-    // Simulate loading delay
-    setTimeout(() => {
-      setIsLoading(false);
-      setTitle(`Article ${articleId}`);
-    }, 1500);
+  useEffect(() => {
+    if (address === undefined) {
+      navigate("/", { replace: true });
+    }
+  }, [address, navigate]);
+
+  const { mutateAsync, isPending } = useCreateNewArticle();
+  const { data: articleData, isLoading } = useGetArticleById(selectedArticle);
+  const { mutateAsync: uploadImageAsync, isPending: isPendingUpload } =
+    useUploadImage();
+  const { mutateAsync: updateArticleAsync } = useUpdateArticle();
+
+  useEffect(() => {
+    if (articleData) {
+      setContentArticle(articleData?.article);
+      setTitle(articleData?.article?.title || "Untitled Article");
+      setIsPublished(articleData?.article?.is_published || false);
+    }
+  }, [articleData]);
+
+  useEffect(() => {
+    setSelectedArticle(id);
+  }, [id]);
+
+  const handleCreateNew = useCallback(async () => {
+    try {
+      const newArticle = await mutateAsync({ wallet_address: address || "" });
+      console.log("New article created:", newArticle);
+      setSelectedArticle(newArticle.id);
+      setTitle(newArticle.title || "Untitled Article");
+      setIsPublished(!!newArticle?.date);
+      queryClient.invalidateQueries({
+        queryKey: getListOfArticlesByAddressKeys(address || ""),
+      });
+      navigate(`/workspace/${newArticle.id}`);
+    } catch {
+      toast.error("Failed to create new article. Please try again.");
+    }
+  }, [mutateAsync, address, queryClient, navigate]);
+
+  const fileInputRef =
+    useState<HTMLInputElement | null>(null)[0] ||
+    (typeof window !== "undefined" ? document.createElement("input") : null);
+
+  const handleCoverChange = async (
+    e: React.ChangeEvent<HTMLInputElement> | Event
+  ) => {
+    let file: File | null = null;
+    if ("target" in e && e.target && (e.target as HTMLInputElement).files) {
+      const files = (e.target as HTMLInputElement).files;
+      if (!files || files.length === 0) return;
+      file = files[0];
+    }
+    if (!file) return;
+    try {
+      const result = await uploadImageAsync(file);
+      if (result?.fileUrl && selectedArticle) {
+        await updateArticleAsync({
+          id: selectedArticle,
+          data: { image: result.fileUrl },
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: getListOfArticlesByAddressKeys(address || ""),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getArticleByIdKeys(selectedArticle),
+        });
+        toast.success("Cover image updated!");
+      }
+    } catch {
+      toast.error("Failed to upload image. Please try again.");
+    }
   };
 
-  // Simulate creating new article
-  const handleCreateNew = () => {
-    setIsLoading(true);
-    const newId = Date.now().toString();
-    setSelectedArticle(newId);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setTitle("Untitled Article");
-      setIsPublished(false);
-    }, 1000);
+  const triggerFileInput = () => {
+    if (!fileInputRef) return;
+    fileInputRef.type = "file";
+    fileInputRef.accept = "image/*";
+    fileInputRef.onchange = handleCoverChange;
+    fileInputRef.click();
   };
-
-  const renderEmptyState = () => (
-    <div className="flex-1 flex items-center justify-center">
-      <div className="text-center space-y-6 max-w-md">
-        <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center">
-          <FileText className="h-12 w-12 text-muted-foreground" />
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            No article selected
-          </h2>
-          <p className="text-muted-foreground">
-            Choose an existing article from the sidebar or create a new one to
-            get started.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button onClick={handleCreateNew} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create New Article
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => handleArticleSelect("demo")}
-            className="gap-2"
-          >
-            <FileText className="h-4 w-4" />
-            Open Demo Article
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderLoadingState = () => (
-    <div className="flex-1 overflow-auto">
-      <div className="space-y-4">
-        {/* Loading header */}
-        <div className="px-8 py-4 border-b">
-          <Skeleton className="h-8 w-64" />
-        </div>
-
-        {/* Loading cover image */}
-        <div className="relative h-48 md:h-92">
-          <Skeleton className="w-full h-full" />
-        </div>
-
-        {/* Loading content */}
-        <div className="px-8 space-y-4">
-          <Skeleton className="h-12 w-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-4/5" />
-            <Skeleton className="h-4 w-3/4" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderArticleContent = () => (
-    <div className="flex-1 overflow-auto">
-      <div className="relative h-48 md:h-92 bg-gradient-to-r from-blue-400 to-purple-500 cursor-pointer group">
-        <img
-          src="/placeholder.svg"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-          <Button variant="secondary" size="sm" className="gap-2">
-            <Camera className="h-4 w-4" />
-            Change Cover
-          </Button>
-        </div>
-      </div>
-      <div className="px-8">
-        <SimpleEditor />
-      </div>
-    </div>
-  );
 
   return (
     <SidebarProvider>
@@ -137,9 +136,20 @@ const Workspace = () => {
           />
         )}
 
-        {!selectedArticle && renderEmptyState()}
-        {selectedArticle && isLoading && renderLoadingState()}
-        {selectedArticle && !isLoading && renderArticleContent()}
+        {!selectedArticle && !isLoading && !isPending && (
+          <RenderEmptyState
+            handleCreateNew={handleCreateNew}
+            isPending={isPending}
+          />
+        )}
+        {(isPending || isLoading) && <RenderLoadingState />}
+        {selectedArticle && !isPending && !isLoading && (
+          <RenderArticleContent
+            contentArticle={contentArticle}
+            triggerFileInput={triggerFileInput}
+            isPendingUpload={isPendingUpload}
+          />
+        )}
       </SidebarInset>
     </SidebarProvider>
   );

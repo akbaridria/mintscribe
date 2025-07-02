@@ -1,21 +1,25 @@
 import { ProfileInfo } from "./profile-info";
 import { EditProfileForm } from "./edit-profile-form";
-import type { User } from "@/types";
+import type { User, UserDetail } from "@/types";
 
 interface ProfileHeaderProps {
-  user?: User;
+  userDetail?: UserDetail;
   isEditing: boolean;
   isFollowing: boolean;
+  isLoading: boolean;
+  isOwner: boolean;
   onFollowToggle: () => void;
   onEditClick: () => void;
-  onSave: (user: User) => void;
+  onSave: (user: Partial<User>) => void;
   onCancel: () => void;
 }
 
 export function ProfileHeader({
-  user,
+  userDetail,
   isEditing,
   isFollowing,
+  isLoading,
+  isOwner,
   onFollowToggle,
   onEditClick,
   onSave,
@@ -31,14 +35,16 @@ export function ProfileHeader({
           <div className="flex-1 space-y-4">
             {!isEditing ? (
               <ProfileInfo
-                user={user}
+                userDetail={userDetail}
+                isOwner={isOwner}
+                isLoading={isLoading}
                 isFollowing={isFollowing}
                 onFollowToggle={onFollowToggle}
                 onEditClick={onEditClick}
               />
             ) : (
               <EditProfileForm
-                user={user}
+                user={userDetail?.user}
                 onSave={onSave}
                 onCancel={onCancel}
               />

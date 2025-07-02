@@ -12,7 +12,7 @@ const AboutTab: React.FC<AboutTabProps> = ({ user }) => {
   return (
     <Card className="border border-gray-200">
       <CardHeader>
-        <h3 className="text-xl font-bold">About {user?.name}</h3>
+        <h3 className="text-xl font-bold">About</h3>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
@@ -25,15 +25,15 @@ const AboutTab: React.FC<AboutTabProps> = ({ user }) => {
         <div>
           <h4 className="font-semibold mb-3">Connect</h4>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled={!user?.socialLinks?.twitter}>
               <Twitter className="w-4 h-4 mr-2" />
               Twitter
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled={!user?.socialLinks?.github}>
               <Github className="w-4 h-4 mr-2" />
               GitHub
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled={!user?.socialLinks?.linkedin}>
               <Linkedin className="w-4 h-4 mr-2" />
               LinkedIn
             </Button>

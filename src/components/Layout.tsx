@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "./header/index";
 import { Web3Provider } from "./web3-provider";
+import { Toaster } from "./ui/sonner";
 
 const Layout = () => {
   return (
@@ -13,6 +14,7 @@ const Layout = () => {
         <footer className="py-6 border-t text-center text-gray-500 text-sm">
           © {new Date().getFullYear()} MintScribe. All rights reserved.
         </footer>
+        <Toaster />
       </div>
     </Web3Provider>
   );
