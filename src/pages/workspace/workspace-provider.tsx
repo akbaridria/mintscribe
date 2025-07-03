@@ -16,9 +16,6 @@ import {
 } from "@/api/constant/query-keys";
 import type { IArticle } from "@/types";
 
-const defaultContentArticle =
-  "<h1>Write your story...</h1><p>Start writing your article here. Use the formatting tools above to add headings, lists, images, and more.</p>";
-
 export interface WorkspaceContextProps {
   isPublished: boolean;
   selectedArticle?: string;
@@ -26,12 +23,10 @@ export interface WorkspaceContextProps {
   isLoading: boolean;
   isPending: boolean;
   isPendingUpload: boolean;
-  editorContent?: string;
   isPendingUpdate?: boolean;
   handleCreateNew: () => Promise<void>;
   triggerFileInput: () => void;
   setIsPublished: (published: boolean) => void;
-  setEditorContent?: (content: string) => void;
   updateArticle: (data: Partial<IArticle>) => Promise<void>;
 }
 
@@ -46,9 +41,6 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [contentArticle, setContentArticle] = useState<IArticle | undefined>(
     undefined
-  );
-  const [editorContent, setEditorContent] = useState<string>(
-    defaultContentArticle
   );
   const queryClient = useQueryClient();
   const { address, isConnecting } = useAccount();
@@ -86,7 +78,6 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (articleData) {
       setContentArticle(articleData?.article);
-      setEditorContent(articleData?.article?.content || defaultContentArticle);
       setIsPublished(articleData?.article?.is_published || false);
     }
   }, [articleData]);
@@ -153,12 +144,10 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({
         isLoading,
         isPending,
         isPendingUpload,
-        editorContent,
         isPendingUpdate,
         setIsPublished,
         handleCreateNew,
         triggerFileInput,
-        setEditorContent,
         updateArticle,
       }}
     >

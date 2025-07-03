@@ -14,15 +14,8 @@ import EditorTitle from "./components/editor-title";
 import EditorExcerpt from "./components/editor-excerpt";
 
 const Workspace = () => {
-  const {
-    selectedArticle,
-    contentArticle,
-    isLoading,
-    isPending,
-    isPendingUpload,
-    handleCreateNew,
-    triggerFileInput,
-  } = useWorkspace();
+  const { selectedArticle, isLoading, isPending, handleCreateNew } =
+    useWorkspace();
 
   return (
     <SidebarProvider>
@@ -44,11 +37,7 @@ const Workspace = () => {
         )}
         {(isPending || isLoading) && <RenderLoadingState />}
         {selectedArticle && !isPending && !isLoading && (
-          <RenderArticleContent
-            contentArticle={contentArticle}
-            triggerFileInput={triggerFileInput}
-            isPendingUpload={isPendingUpload}
-          />
+          <RenderArticleContent />
         )}
       </SidebarInset>
     </SidebarProvider>

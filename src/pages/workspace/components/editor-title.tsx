@@ -1,10 +1,13 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useState } from "react";
+import { useEffect, useRef } from "react";
+import { useWorkspace } from "../use-workspace";
 
 const EditorTitle = () => {
-  const [, setTitleContent] = useState("");
+  const { updateArticle, contentArticle } = useWorkspace();
+  const updateTimeoutRef = useRef(null as NodeJS.Timeout | null);
+
   const titleEditor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -24,17 +27,37 @@ const EditorTitle = () => {
         emptyEditorClass: "is-editor-empty",
       }),
     ],
-    content: "<h1></h1>",
+    content: `<h1>${contentArticle?.title || ""}</h1>`,
     onUpdate: ({ editor }) => {
-      setTitleContent(editor.getText());
+      const newTitle = editor.getText();
+
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+
+      updateTimeoutRef.current = setTimeout(() => {
+        if (contentArticle && newTitle !== contentArticle.title) {
+          updateArticle({ title: newTitle });
+        }
+      }, 2000);
     },
   });
+
+  useEffect(() => {
+    titleEditor?.commands.setContent(`<h1>${contentArticle?.title || ""}</h1>`);
+  }, [contentArticle?.title, titleEditor]);
+
+  useEffect(() => {
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="relative">
-      <EditorContent
-        editor={titleEditor}
-        className="title-editor"
-      />
+      <EditorContent editor={titleEditor} className="title-editor" />
     </div>
   );
 };
