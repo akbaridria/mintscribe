@@ -25,7 +25,7 @@
     "@tiptap/extension-highlight": "^2.23.0",
     "@tiptap/extension-image": "^2.23.0",
     "@tiptap/extension-link": "^2.23.0",
-    "@tiptap/extension-placeholder": "^2.23.0",
+    "@tiptap/extension-placeholder": "^2.24.0",
     "@tiptap/extension-subscript": "^2.23.0",
     "@tiptap/extension-superscript": "^2.23.0",
     "@tiptap/extension-table": "^2.23.0",
@@ -57,6 +57,7 @@
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
+    "usehooks-ts": "^3.1.1",
     "viem": "2.x",
     "wagmi": "^2.15.6",
     "zod": "^3.25.67"

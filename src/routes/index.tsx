@@ -13,7 +13,8 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "profile/:id", element: <Profile /> },
       { path: "search", element: <Search /> },
-      { path: "workspace/:id?", element: <Workspace /> },
+      { path: "workspace", element: <Workspace /> },
+      { path: "workspace/:id", element: <Workspace /> },
     ],
   },
 ]);

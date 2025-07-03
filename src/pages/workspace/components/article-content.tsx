@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import type { IArticle } from "@/types";
+import { useWorkspace } from "../use-workspace";
 
 interface RenderArticleContentProps {
   contentArticle?: IArticle;
@@ -10,16 +11,13 @@ interface RenderArticleContentProps {
   isPendingUpload: boolean;
 }
 
-const defaultContentArticle =
-  "<h1>Write your story...</h1><p>Start writing your article here. Use the formatting tools above to add headings, lists, images, and more.</p>";
-
 export const RenderArticleContent = ({
   contentArticle,
   triggerFileInput,
   isPendingUpload,
 }: RenderArticleContentProps) => {
   const [imageLoading, setImageLoading] = useState(true);
-  const [, setEditorContent] = useState<string>(defaultContentArticle);
+  const { editorContent, setEditorContent } = useWorkspace();
   return (
     <div className="flex-1 overflow-auto">
       <div className="relative h-48 md:h-92 bg-gradient-to-r from-blue-400 to-purple-500 group">
@@ -51,7 +49,8 @@ export const RenderArticleContent = ({
       </div>
       <div className="px-8">
         <SimpleEditor
-          onContentChange={(content: string) => setEditorContent(content)}
+          onContentChange={(content: string) => setEditorContent?.(content)}
+          defaultContent={editorContent}
         />
       </div>
     </div>

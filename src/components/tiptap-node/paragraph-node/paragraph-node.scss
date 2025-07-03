@@ -47,7 +47,7 @@
   }
 
   // Placeholder
-  > p.is-editor-empty::before {
+  >p.is-editor-empty::before {
     content: attr(data-placeholder);
     pointer-events: none;
     color: var(--placeholder-color);
@@ -100,6 +100,7 @@
      TEXT DECORATION
      ===================== */
 .tiptap.ProseMirror {
+
   // Text decoration inheritance for spans
   a span {
     text-decoration: underline;
@@ -189,6 +190,7 @@
      HEADINGS
      ===================== */
 .tiptap.ProseMirror {
+
   h1,
   h2,
   h3,
@@ -272,6 +274,7 @@
      THREADS
      ===================== */
 .tiptap.ProseMirror {
+
   // Base styles for inline threads
   .tiptap-thread.tiptap-thread--unresolved.tiptap-thread--inline {
     transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
@@ -368,15 +371,11 @@
 /* =====================
      PLACEHOLDER
      ===================== */
-.is-empty[data-placeholder]:has(
-    > .ProseMirror-trailingBreak:only-child
-  )::before {
-  content: "Write, type '/' for commands…";
+.is-empty[data-placeholder]:has(> .ProseMirror-trailingBreak:only-child)::before {
+  content: attr(data-placeholder);
 }
 
-.is-empty[data-placeholder]:has(
-    > .ProseMirror-trailingBreak:only-child
-  ):before {
+.is-empty[data-placeholder]:has(> .ProseMirror-trailingBreak:only-child):before {
   pointer-events: none;
   height: 0;
   position: absolute;

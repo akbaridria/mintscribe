@@ -20,7 +20,6 @@ export const useGetUserDetailByAddress = (address?: string) =>
     queryKey: getUserDetailKeys(address || ""),
     queryFn: () => getUserDetail(address || ""),
     enabled: !!address,
-    retry: 2,
   });
 
 export const useUpdateUserDetailByAddress = () =>
@@ -36,11 +35,10 @@ export const useCreateNewArticle = () =>
   });
 
 export const useGetArticleById = (id?: string) =>
-  useQuery<{article: IArticle; author: User}, Error>({
+  useQuery<{ article: IArticle; author: User }, Error>({
     queryKey: getArticleByIdKeys(id || ""),
     queryFn: () => getArticleById(id || ""),
     enabled: !!id,
-    retry: 2,
   });
 
 export const useGetListOfArticlesByAddress = (address?: string) =>
@@ -48,7 +46,6 @@ export const useGetListOfArticlesByAddress = (address?: string) =>
     queryKey: getListOfArticlesByAddressKeys(address || ""),
     queryFn: () => getListOfArticlesByAddress(address || ""),
     enabled: !!address,
-    retry: 2,
   });
 
 export const useUploadImage = () =>
