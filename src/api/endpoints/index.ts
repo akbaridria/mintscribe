@@ -43,6 +43,21 @@ const updateArticle = async (id: string, data: Partial<IArticle>) =>
     .put(`/article/${id}`, data)
     .then((res) => res.data);
 
+const getTopLikes = async () =>
+  apiClient()
+    .get("/article/top/likes")
+    .then((res) => res.data);
+
+const getAllCategories = async () =>
+  apiClient()
+    .get("/article/categories/count")
+    .then((res) => res.data);
+
+const getListArticles = async (cursor?: string, category?: string) =>
+  apiClient()
+    .get(`/article/list?limit=5&cursor=${cursor || ""}&category=${category || ""}`)
+    .then((res) => res.data);
+
 export {
   getUserDetail,
   updateUserDetail,
@@ -51,4 +66,7 @@ export {
   getListOfArticlesByAddress,
   uploadImage,
   updateArticle,
+  getTopLikes,
+  getAllCategories,
+  getListArticles,
 };

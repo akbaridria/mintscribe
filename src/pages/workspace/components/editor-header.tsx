@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Save, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useWorkspace } from "../use-workspace";
+import DialogPublish from "./dialog-publish";
 
 export function EditorHeader() {
   const { isPendingUpdate, isPublished } = useWorkspace();
@@ -35,10 +35,7 @@ export function EditorHeader() {
         </div>
 
         <div className="flex items-center gap-2 ml-4">
-          <Button size="sm" className="shrink-0">
-            <Save className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Publish</span>
-          </Button>
+          <DialogPublish />
         </div>
       </div>
     </header>

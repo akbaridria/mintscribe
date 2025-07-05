@@ -1,10 +1,12 @@
 import { motion } from "motion/react";
 import CarouselImage from "./carousel-image";
-import type { Article } from "@/types";
+import type { IArticle } from "@/types";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { formatAddress } from "@/lib/utils";
 
 interface CarouselSlideProps {
-  post: Article;
+  post: IArticle;
 }
 
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ post }) => {
@@ -46,11 +48,11 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ post }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
           >
-            <span>By {post.author}</span>
+            <span>By {formatAddress(post.author)}</span>
             <span className="hidden lg:inline">•</span>
-            <span>{post.date}</span>
+            <span>{format(new Date(post.date), "MMM d, yyyy")}</span>
             <span className="hidden lg:inline">•</span>
-            <span>{post.readTime}</span>
+            <span>{post.read_time}</span>
           </motion.div>
 
           <motion.div

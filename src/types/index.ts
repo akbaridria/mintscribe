@@ -4,7 +4,7 @@ export interface IArticle {
   excerpt: string;
   author: string;
   date: string;
-  readTime: string;
+  read_time: string;
   category: string;
   image?: string;
   content: string;

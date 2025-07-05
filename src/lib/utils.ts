@@ -18,3 +18,13 @@ export const formatAddress = (address?: string) => {
   }
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
+
+export const calculateReadTime = (content: string): string => {
+  if (!content) return "1 min read";
+
+  const words = content.trim().split(/\s+/).length;
+
+  const minutes = Math.max(1, Math.ceil(words / 225));
+
+  return `${minutes} min read`;
+};

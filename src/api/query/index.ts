@@ -1,16 +1,20 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createNewArticle,
+  getAllCategories,
   getArticleById,
   getListOfArticlesByAddress,
+  getTopLikes,
   getUserDetail,
   updateArticle,
   updateUserDetail,
   uploadImage,
 } from "../endpoints";
 import {
+  getAllCategoriesKeys,
   getArticleByIdKeys,
   getListOfArticlesByAddressKeys,
+  getTopLikesKeys,
   getUserDetailKeys,
 } from "../constant/query-keys";
 import type { IArticle, User, UserDetail } from "@/types";
@@ -58,4 +62,16 @@ export const useUpdateArticle = () =>
   useMutation<IArticle, Error, { id: string; data: Partial<IArticle> }>({
     mutationKey: [],
     mutationFn: ({ id, data }) => updateArticle(id, data),
+  });
+
+export const useGetTopLikes = () =>
+  useQuery<{ article: IArticle; user: User }[], Error>({
+    queryKey: getTopLikesKeys(),
+    queryFn: () => getTopLikes(),
+  });
+
+export const useGetAllCategories = () =>
+  useQuery<{ category: string; count: number }[], Error>({
+    queryKey: getAllCategoriesKeys(),
+    queryFn: () => getAllCategories(),
   });
