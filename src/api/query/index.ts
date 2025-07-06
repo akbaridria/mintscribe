@@ -3,6 +3,7 @@ import {
   createNewArticle,
   getAllCategories,
   getArticleById,
+  getCoinDetail,
   getListOfArticlesByAddress,
   getTopLikes,
   getUserDetail,
@@ -74,4 +75,14 @@ export const useGetAllCategories = () =>
   useQuery<{ category: string; count: number }[], Error>({
     queryKey: getAllCategoriesKeys(),
     queryFn: () => getAllCategories(),
+  });
+
+export const useGetCoinDetail = (address?: string) =>
+  useQuery({
+    queryKey: ["coinDetail", address],
+    queryFn: () => {
+      if (!address) return Promise.resolve(null);
+      return getCoinDetail(address);
+    },
+    enabled: !!address,
   });

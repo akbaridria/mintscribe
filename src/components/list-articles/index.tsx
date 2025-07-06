@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import Article from "./article";
 import type { IArticle } from "@/types";
@@ -9,6 +9,7 @@ import { getListArticles } from "@/api/endpoints";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 interface ArticleItem {
   article: IArticle;
@@ -50,7 +51,22 @@ function ArticleSkeleton() {
 
 export default function ArticlesList() {
   const [selectedArticle, setSelectedArticle] = useState<IArticle | null>(null);
-  const [selectedCategory] = useState<string | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    undefined
+  );
+  const [searchArticle, setSearchArticle] = useState<string | undefined>(
+    undefined
+  );
+  const [search] = useSearchParams();
+
+  useEffect(() => {
+    const category = search.get("category");
+    const articleSearch = search.get("search");
+    if (articleSearch) setSearchArticle(articleSearch);
+    else setSearchArticle(undefined);
+    if (category) setSelectedCategory(category);
+    else setSelectedCategory(undefined);
+  }, [search]);
 
   const {
     data,
@@ -60,9 +76,13 @@ export default function ArticlesList() {
     isLoading,
     error,
   } = useInfiniteQuery<ArticlePageData, Error>({
-    queryKey: ["articles", selectedCategory],
+    queryKey: ["articles", selectedCategory, searchArticle],
     queryFn: ({ pageParam }) =>
-      getListArticles(pageParam as string | undefined, selectedCategory),
+      getListArticles(
+        pageParam as string | undefined,
+        selectedCategory,
+        searchArticle
+      ),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     initialPageParam: undefined as string | undefined,
   });

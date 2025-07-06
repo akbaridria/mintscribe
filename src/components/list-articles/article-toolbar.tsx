@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { X, ExternalLink, Calendar } from "lucide-react";
+import { X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -11,17 +11,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { IArticle } from "@/types";
+import { Link } from "react-router-dom";
 
 interface ArticleToolbarProps {
   article: IArticle;
-  onClose: () => void;
-  onViewFullArticle?: () => void;
+  onClose?: () => void;
 }
 
-export function ArticleToolbar({
-  onClose,
-  onViewFullArticle,
-}: ArticleToolbarProps) {
+export function ArticleToolbar({ article, onClose }: ArticleToolbarProps) {
   return (
     <TooltipProvider>
       <motion.div
@@ -30,32 +27,21 @@ export function ArticleToolbar({
         className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 p-4 z-20"
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  Public: 20 March 2025
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>This article will be freely available on 20 March 2025</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+          <div className="flex items-center gap-3"></div>
 
           <div className="flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onViewFullArticle}
-                  className="flex items-center gap-2"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  <span className="hidden sm:inline">View Full</span>
-                </Button>
+                <Link to={`/article/${article.id}`}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span className="hidden sm:inline">View Full</span>
+                  </Button>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Open full article in new tab</p>

@@ -4,6 +4,7 @@ import Home from "@/pages/home";
 import Profile from "@/pages/profile";
 import Search from "@/pages/search";
 import Workspace from "@/pages/workspace";
+import DetailArticle from "@/pages/article";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
       { path: "search", element: <Search /> },
       { path: "workspace", element: <Workspace /> },
       { path: "workspace/:id", element: <Workspace /> },
+      { path: "article/:id", element: <DetailArticle /> },
     ],
   },
 ]);

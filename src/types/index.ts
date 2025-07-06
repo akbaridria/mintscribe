@@ -29,3 +29,9 @@ export interface UserDetail {
   total_articles: number;
   total_following: number;
 }
+
+export interface ICoinData {
+  name?: string;
+  address?: string;
+  symbol?: string;
+}

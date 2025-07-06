@@ -47,7 +47,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
                 </Badge>
                 <span>{article.date}</span>
                 <span>·</span>
-                <span>{article.readTime}</span>
+                <span>{article.read_time}</span>
               </div>
             </div>
 

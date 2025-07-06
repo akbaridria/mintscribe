@@ -4,6 +4,7 @@ import type { IArticle } from "@/types";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { formatAddress } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 interface CarouselSlideProps {
   post: IArticle;
@@ -55,14 +56,16 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ post }) => {
             <span>{post.read_time}</span>
           </motion.div>
 
-          <motion.div
-            className="hidden lg:block"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-          >
-            <Button className="mt-8">Read Article</Button>
-          </motion.div>
+          <Link to={`/article/${post.id}`}>
+            <motion.div
+              className="hidden lg:block"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <Button className="mt-8">Read Article</Button>
+            </motion.div>
+          </Link>
         </div>
       </div>
 

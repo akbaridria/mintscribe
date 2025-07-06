@@ -9,7 +9,8 @@ import { Calendar, Clock, User } from "lucide-react";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { ArticleToolbar } from "./article-toolbar";
-import { LockedContent } from "./locked-content";
+import { formatAddress } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface ArticleProps {
   article: IArticle;
@@ -24,8 +25,6 @@ const Article: React.FC<ArticleProps> = ({
   onClick,
   onClose,
 }) => {
-  const hasAccess = false;
-
   if (isExpanded) {
     return (
       <>
@@ -42,11 +41,7 @@ const Article: React.FC<ArticleProps> = ({
           className="fixed inset-4 z-50 bg-white rounded-lg shadow-2xl overflow-hidden"
           style={{ maxWidth: "1000px", maxHeight: "90vh", margin: "auto" }}
         >
-          <ArticleToolbar
-            article={article}
-            onClose={() => {}}
-            onViewFullArticle={() => {}}
-          />
+          <ArticleToolbar article={article} onClose={onClose} />
 
           <div className="overflow-y-auto h-full pt-16">
             <motion.div
@@ -88,7 +83,7 @@ const Article: React.FC<ArticleProps> = ({
                   <div>
                     <div className="font-semibold flex items-center">
                       <User className="h-4 w-4 mr-1" />
-                      {article.author}
+                      {formatAddress(article.author)}
                     </div>
                   </div>
                 </motion.div>
@@ -99,12 +94,14 @@ const Article: React.FC<ArticleProps> = ({
                 >
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-1" />
-                    {article.date}
+                    {article.date
+                      ? format(new Date(article.date), "MMM d, yyyy")
+                      : "No date"}
                   </div>
                   <div>•</div>
                   <div className="flex items-center">
                     <Clock className="h-4 w-4 mr-1" />
-                    {article.readTime}
+                    {article.read_time}
                   </div>
                 </motion.div>
               </div>
@@ -116,17 +113,10 @@ const Article: React.FC<ArticleProps> = ({
                 {article.excerpt}
               </motion.div>
 
-              {hasAccess ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="prose prose-lg max-w-none"
-                  dangerouslySetInnerHTML={{ __html: article.excerpt }}
-                />
-              ) : (
-                <LockedContent />
-              )}
+              <motion.div
+                className="tiptap ProseMirror"
+                dangerouslySetInnerHTML={{ __html: article.content || "" }}
+              />
             </div>
           </div>
         </motion.div>
@@ -187,7 +177,7 @@ const Article: React.FC<ArticleProps> = ({
                   name={article.author}
                 />
                 <div className="font-medium text-sm sm:text-base md:text-sm">
-                  {article.author}
+                  {formatAddress(article.author)}
                 </div>
               </motion.div>
 
@@ -197,12 +187,16 @@ const Article: React.FC<ArticleProps> = ({
               >
                 <div className="flex items-center">
                   <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  <span className="whitespace-nowrap">{article.date}</span>
+                  <span className="whitespace-nowrap">
+                    {article.date
+                      ? format(new Date(article.date), "MMM d, yyyy")
+                      : "No date"}
+                  </span>
                 </div>
                 <div>•</div>
                 <div className="flex items-center">
                   <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  <span className="whitespace-nowrap">{article.readTime}</span>
+                  <span className="whitespace-nowrap">{article.read_time}</span>
                 </div>
               </motion.div>
             </div>

@@ -1,5 +1,7 @@
 import type { IArticle, User } from "@/types";
 import { apiClient } from "../client";
+import { getCoin } from "@zoralabs/coins-sdk";
+import { baseSepolia } from "viem/chains";
 
 const getUserDetail = async (address: string) =>
   apiClient()
@@ -53,11 +55,26 @@ const getAllCategories = async () =>
     .get("/article/categories/count")
     .then((res) => res.data);
 
-const getListArticles = async (cursor?: string, category?: string) =>
+const getListArticles = async (
+  cursor?: string,
+  category?: string,
+  search?: string
+) =>
   apiClient()
-    .get(`/article/list?limit=5&cursor=${cursor || ""}&category=${category || ""}`)
+    .get(
+      `/article/list?limit=5&cursor=${cursor || ""}&category=${
+        category || ""
+      }&search=${search || ""}`
+    )
     .then((res) => res.data);
 
+const getCoinDetail = async (address: string) => {
+  const data = await getCoin({
+    address: address,
+    chain: baseSepolia.id,
+  });
+  return data.data?.zora20Token;
+};
 export {
   getUserDetail,
   updateUserDetail,
@@ -69,4 +86,5 @@ export {
   getTopLikes,
   getAllCategories,
   getListArticles,
+  getCoinDetail,
 };

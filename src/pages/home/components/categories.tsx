@@ -2,7 +2,8 @@ import { useGetAllCategories } from "@/api/query";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Link, useSearchParams } from "react-router-dom";
 
 function CategorySkeleton() {
   return (
@@ -15,6 +16,9 @@ function CategorySkeleton() {
 
 const Categories = () => {
   const { data, isLoading, error } = useGetAllCategories();
+  const [search] = useSearchParams();
+
+  const selectedCategory = search.get("category");
 
   return (
     <Card className="">
@@ -46,8 +50,12 @@ const Categories = () => {
               className="flex items-center justify-between py-1"
             >
               <Link
-                to="#"
-                className="text-sm hover:text-primary transition-colors"
+                to={`?category=${category.category}`}
+                className={cn("text-sm hover:text-primary transition-colors", {
+                  "text-primary font-bold": selectedCategory === category.category,
+                  "text-muted-foreground":
+                    selectedCategory !== category.category,
+                })}
               >
                 {category.category}
               </Link>
