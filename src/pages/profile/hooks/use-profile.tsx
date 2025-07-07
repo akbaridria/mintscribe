@@ -10,20 +10,18 @@ import { useParams } from "react-router-dom";
 export function useProfile() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [userDetail, setUserDetail] = useState<UserDetail | undefined>(undefined);
+  const [userDetail, setUserDetail] = useState<UserDetail | undefined>(
+    undefined
+  );
   const { id } = useParams();
 
   const { address } = useAccount();
 
   const isOwner = useMemo(() => {
     return address?.toLowerCase() === id?.toLowerCase();
-  }, [address, id])
+  }, [address, id]);
 
-  const {
-    data,
-    isLoading,
-    refetch,
-  } = useGetUserDetailByAddress(id);
+  const { data, isLoading, refetch } = useGetUserDetailByAddress(id?.toLowerCase() || "");
   const { mutateAsync } = useUpdateUserDetailByAddress();
 
   useEffect(() => {
@@ -31,8 +29,10 @@ export function useProfile() {
   }, [data]);
 
   const handleSave = (user: Partial<User>) => {
-    
-    mutateAsync({ address: address || "", data: {...user, wallet_address: address } })
+    mutateAsync({
+      address: address?.toLowerCase() || "",
+      data: { ...user, wallet_address: address?.toLowerCase() },
+    })
       .then(() => {
         refetch();
       })

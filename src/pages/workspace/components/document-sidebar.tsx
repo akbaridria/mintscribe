@@ -27,7 +27,7 @@ export function DocumentSidebar() {
     data,
     isLoading,
     refetch: refetchListOfArticles,
-  } = useGetListOfArticlesByAddress(address || "");
+  } = useGetListOfArticlesByAddress(address?.toLowerCase() || "");
   const { mutateAsync } = useCreateNewArticle();
   const navigate = useNavigate();
 

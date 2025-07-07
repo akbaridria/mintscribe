@@ -75,6 +75,41 @@ const getCoinDetail = async (address: string) => {
   });
   return data.data?.zora20Token;
 };
+
+const getAllLikesFromArticle = (id: string) =>
+  apiClient()
+    .get(`/article/${id}/likes/count`)
+    .then((res) => res.data);
+
+const insertLikes = (id: string, wallet_address: string) =>
+  apiClient()
+    .post(`/article/${id}/likes`, { wallet_address })
+    .then((res) => res.data);
+
+const removeLikes = (id: string, wallet_address: string) =>
+  apiClient()
+    .delete(`/article/${id}/likes`, { data: { wallet_address } })
+    .then((res) => res.data);
+
+const getIsUserLikes = (id: string, wallet_address: string) =>
+  apiClient()
+    .get(`/article/${id}/likes/user/${wallet_address}`)
+    .then((res) => res.data);
+
+const getAllCommentsFromArticle = (id: string) =>
+  apiClient()
+    .get(`/comment/${id}`)
+    .then((res) => res.data);
+
+const publishComment = (data: {
+  article_id: string;
+  author_wallet_address: string;
+  content: string;
+}) =>
+  apiClient()
+    .post("/comment", data)
+    .then((res) => res.data);
+
 export {
   getUserDetail,
   updateUserDetail,
@@ -87,4 +122,10 @@ export {
   getAllCategories,
   getListArticles,
   getCoinDetail,
+  getAllLikesFromArticle,
+  insertLikes,
+  removeLikes,
+  getIsUserLikes,
+  getAllCommentsFromArticle,
+  publishComment,
 };

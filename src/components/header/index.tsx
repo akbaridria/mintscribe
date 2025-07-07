@@ -50,14 +50,16 @@ const Header = () => {
           <NotificationDropdown />
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative transition-all hover:scale-105"
-              >
-                <PenLine className="h-4 w-4" />
-                <span className="sr-only">Write article</span>
-              </Button>
+              <Link to={`/workspace`}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative transition-all hover:scale-105"
+                >
+                  <PenLine className="h-4 w-4" />
+                  <span className="sr-only">Write article</span>
+                </Button>
+              </Link>
             </TooltipTrigger>
             <TooltipContent>Write new article</TooltipContent>
           </Tooltip>

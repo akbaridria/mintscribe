@@ -18,7 +18,7 @@ import { useAccount } from "wagmi";
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { address } = useAccount();
-  const { data, isLoading } = useGetUserDetailByAddress(address);
+  const { data, isLoading } = useGetUserDetailByAddress(address?.toLowerCase() || "");
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

@@ -50,9 +50,14 @@ const Categories = () => {
               className="flex items-center justify-between py-1"
             >
               <Link
-                to={`?category=${category.category}`}
+                to={
+                  selectedCategory === category.category
+                    ? "?"
+                    : `?category=${category.category}`
+                }
                 className={cn("text-sm hover:text-primary transition-colors", {
-                  "text-primary font-bold": selectedCategory === category.category,
+                  "text-primary font-bold":
+                    selectedCategory === category.category,
                   "text-muted-foreground":
                     selectedCategory !== category.category,
                 })}

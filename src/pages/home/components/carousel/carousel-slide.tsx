@@ -5,25 +5,56 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { formatAddress } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { useGetCoinDetail } from "@/api/query";
+import { useMemo } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CarouselSlideProps {
   post: IArticle;
 }
 
+const CoinInfo: React.FC<{ ca?: string }> = ({ ca }) => {
+  const { data: coinData, isLoading } = useGetCoinDetail(ca);
+
+  const coinInfo = useMemo(
+    () => ({
+      name: coinData?.name,
+      address: coinData?.address,
+      symbol: coinData?.symbol,
+    }),
+    [coinData]
+  );
+
+  if (isLoading) return <Skeleton className="w-[60px] h-[22px]" />;
+  if (!coinInfo?.symbol) return null;
+  return (
+    <motion.div
+      className="inline-block px-3 py-1 bg-foreground text-xs lg:text-sm font-medium mb-2 lg:mb-4 text-white"
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.1, duration: 0.6 }}
+    >
+      {coinInfo?.symbol}
+    </motion.div>
+  );
+};
+
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ post }) => {
   return (
     <div className="flex flex-col lg:flex-row h-full bg-white">
-      {/* Content Side */}
       <div className="flex-1 flex items-center justify-start p-4 lg:p-12 order-2 lg:order-1 min-h-0">
         <div className="text-gray-900 w-full max-w-none lg:max-w-lg">
-          <motion.div
-            className="inline-block px-3 py-1 bg-gray-100 text-xs lg:text-sm font-medium mb-2 lg:mb-4 text-gray-700"
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-          >
-            {post.category}
-          </motion.div>
+          <div className="flex gap-2 items-center">
+            <motion.div
+              className="inline-block px-3 py-1 bg-gray-100 text-xs lg:text-sm font-medium mb-2 lg:mb-4 text-gray-700"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+            >
+              {post.category}
+            </motion.div>
+            <CoinInfo ca={post?.ca} />
+          </div>
 
           <motion.h2
             className="text-xl lg:text-4xl font-bold mb-2 lg:mb-4 leading-tight line-clamp-3 lg:line-clamp-2 text-gray-900"
@@ -69,7 +100,6 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ post }) => {
         </div>
       </div>
 
-      {/* Image Side */}
       <div className="flex-1 flex items-center justify-center p-3 lg:p-8 order-1 lg:order-2 min-h-0">
         <CarouselImage image={post.image} title={post.title} />
       </div>

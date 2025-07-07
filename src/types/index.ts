@@ -35,3 +35,14 @@ export interface ICoinData {
   address?: string;
   symbol?: string;
 }
+
+export interface Comment {
+  id: string;
+  author: {
+    name: string;
+    wallet_address: string;
+  };
+  content: string;
+  timestamp: string;
+  wallet_address: string;
+}

@@ -40,47 +40,7 @@ interface Notification {
   actionUrl?: string;
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "like",
-    title: "New like on your article",
-    message:
-      "Sarah Johnson liked your article 'Getting Started with React Hooks'",
-    user: { name: "Sarah Johnson" },
-    timestamp: "2 minutes ago",
-    read: false,
-  },
-  {
-    id: "2",
-    type: "comment",
-    title: "New comment",
-    message:
-      "John Doe commented on your article: 'Great explanation! This really helped me understand...'",
-    user: { name: "John Doe" },
-    timestamp: "1 hour ago",
-    read: false,
-  },
-  {
-    id: "3",
-    type: "follow",
-    title: "New follower",
-    message: "Alex Smith started following you",
-    user: { name: "Alex Smith" },
-    timestamp: "3 hours ago",
-    read: false,
-  },
-  {
-    id: "4",
-    type: "mention",
-    title: "You were mentioned",
-    message:
-      "Emma Wilson mentioned you in her article 'Advanced TypeScript Patterns'",
-    user: { name: "Emma Wilson" },
-    timestamp: "1 day ago",
-    read: true,
-  },
-];
+const mockNotifications: Notification[] = [];
 
 const NotificationDropdown = () => {
   const [notifications, setNotifications] =

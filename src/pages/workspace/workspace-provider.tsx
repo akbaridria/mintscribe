@@ -88,7 +88,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleCreateNew = useCallback(async () => {
     try {
-      const newArticle = await mutateAsync({ wallet_address: address || "" });
+      const newArticle = await mutateAsync({ wallet_address: address?.toLowerCase() || "" });
       setSelectedArticle(newArticle.id);
       setIsPublished(!!newArticle?.date);
       queryClient.invalidateQueries({
@@ -121,7 +121,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({
             data: { image: result.fileUrl },
           });
           queryClient.invalidateQueries({
-            queryKey: getListOfArticlesByAddressKeys(address || ""),
+            queryKey: getListOfArticlesByAddressKeys(address?.toLowerCase() || ""),
           });
           queryClient.invalidateQueries({
             queryKey: getArticleByIdKeys(selectedArticle),

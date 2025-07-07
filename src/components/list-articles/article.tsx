@@ -11,6 +11,10 @@ import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-b
 import { ArticleToolbar } from "./article-toolbar";
 import { formatAddress } from "@/lib/utils";
 import { format } from "date-fns";
+import { useGetCoinDetail } from "@/api/query";
+import { useMemo } from "react";
+import { Skeleton } from "../ui/skeleton";
+import { Link } from "react-router-dom";
 
 interface ArticleProps {
   article: IArticle;
@@ -18,6 +22,33 @@ interface ArticleProps {
   onClick?: () => void;
   onClose?: () => void;
 }
+
+const CoinInfo: React.FC<{ article: IArticle; className: string }> = ({
+  article,
+  className,
+}) => {
+  const { data: coinData, isLoading } = useGetCoinDetail(article?.ca);
+
+  const coinInfo = useMemo(
+    () => ({
+      name: coinData?.name,
+      address: coinData?.address,
+      symbol: coinData?.symbol,
+    }),
+    [coinData]
+  );
+
+  if (isLoading) return <Skeleton className="w-[60px] h-[22px]" />;
+  if (!coinInfo?.symbol) return null;
+
+  return (
+    <motion.div layoutId={`article-coin-${article.id}`}>
+      <Badge variant="default" className={className}>
+        ${coinInfo?.symbol}
+      </Badge>
+    </motion.div>
+  );
+};
 
 const Article: React.FC<ArticleProps> = ({
   article,
@@ -59,11 +90,14 @@ const Article: React.FC<ArticleProps> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 
               <div className="absolute bottom-6 left-6 right-6">
-                <motion.div layoutId={`article-badge-${article.id}`}>
-                  <Badge variant="secondary" className="mb-3">
-                    {article.category}
-                  </Badge>
-                </motion.div>
+                <div className="flex gap-2 items-center">
+                  <motion.div layoutId={`article-badge-${article.id}`}>
+                    <Badge variant="secondary" className="mb-3">
+                      {article.category}
+                    </Badge>
+                  </motion.div>
+                  <CoinInfo article={article} className="mb-3" />
+                </div>
                 <motion.h1
                   layoutId={`article-title-${article.id}`}
                   className="text-2xl md:text-4xl font-bold text-white mb-4 leading-tight"
@@ -75,18 +109,20 @@ const Article: React.FC<ArticleProps> = ({
 
             <div className="p-6 md:p-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
-                <motion.div
-                  layoutId={`article-author-${article.id}`}
-                  className="flex items-center space-x-3"
-                >
-                  <Avatar className="w-12 h-12" name={article.author} />
-                  <div>
-                    <div className="font-semibold flex items-center">
-                      <User className="h-4 w-4 mr-1" />
-                      {formatAddress(article.author)}
+                <Link to={`/profile/${article.author}`}>
+                  <motion.div
+                    layoutId={`article-author-${article.id}`}
+                    className="flex items-center space-x-3"
+                  >
+                    <Avatar className="w-12 h-12" name={article.author} />
+                    <div>
+                      <div className="font-semibold flex items-center">
+                        <User className="h-4 w-4 mr-1" />
+                        {formatAddress(article.author)}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
 
                 <motion.div
                   layoutId={`article-meta-${article.id}`}
@@ -151,6 +187,7 @@ const Article: React.FC<ArticleProps> = ({
                   {article.category}
                 </Badge>
               </motion.div>
+              <CoinInfo article={article} className="text-xs sm:text-sm" />
             </div>
 
             <motion.h3

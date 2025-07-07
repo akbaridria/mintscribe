@@ -1,14 +1,16 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, Clock, Calendar, Coins } from "lucide-react";
+import { Clock, Calendar, Coins } from "lucide-react";
 import Avatar from "boring-avatars";
 import { useGetArticleById, useGetCoinDetail } from "@/api/query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import type { IArticle, ICoinData, User } from "@/types";
 import { formatAddress } from "@/lib/utils";
 import DialogBuyCoin from "./components/dialog-buy-coin";
 import CommentsSection from "./components/comment-section";
+import LikeButton from "@/components/like-button";
+import { useAccount } from "wagmi";
 
 interface ArticleDetailProps {
   article: IArticle;
@@ -22,14 +24,6 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
   user,
   coinData,
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(Math.floor(Math.random() * 500) + 50);
-
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -46,13 +40,8 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
           <Badge variant="secondary" className="text-sm">
             {article.category}
           </Badge>
-          {article.is_published && (
-            <Badge variant="outline" className="text-sm">
-              Published
-            </Badge>
-          )}
           {coinData?.address && (
-            <Badge variant="outline" className="text-sm">
+            <Badge variant="default" className="text-sm">
               ${coinData.symbol}
             </Badge>
           )}
@@ -67,29 +56,31 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
         </p>
 
         <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <Avatar name={article.author} size={40} variant="beam" />
-            <div>
-              <h3 className="font-semibold text-gray-900">
-                {user?.name || formatAddress(article.author)}
-              </h3>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  {formatDate(article.date)}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  {article.read_time}
+          <Link to={`/profile/${article.author}`}>
+            <div className="flex items-center gap-4">
+              <Avatar name={article.author} size={40} />
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  {user?.name || formatAddress(article.author)}
+                </h3>
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    {formatDate(article.date)}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {article.read_time}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 
       {coinData?.address && (
-        <Card className="mb-8 p-0">
+        <Card className="mb-8 p-0 shadow-none bg-background">
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-full">
@@ -104,13 +95,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                   purchase tokens to support the author and show your
                   appreciation for their work.
                 </p>
-                <div className="flex items-center gap-4 flex-wrap justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <span className="font-medium">Contract Address:</span>
-                    <code className="bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-md text-sm font-mono text-gray-800">
-                      {formatAddress(coinData.address || "")}
-                    </code>
-                  </div>
+                <div className="flex items-center gap-4 flex-wrap justify-end">
                   <DialogBuyCoin coinData={coinData} />
                 </div>
               </div>
@@ -136,19 +121,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
 
       <div className="py-4 mb-8">
         <div className="flex items-center justify-end">
-          <div className="flex items-center gap-6">
-            <button
-              onClick={handleLike}
-              className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-200 ${
-                isLiked
-                  ? "bg-red-50 text-red-600"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              <Heart className={`h-5 w-5 ${isLiked ? "fill-current" : ""}`} />
-              <span className="text-sm font-medium">{likes}</span>
-            </button>
-          </div>
+          <LikeButton id={article?.id} />
         </div>
       </div>
     </div>
@@ -159,6 +132,7 @@ const DetailArticle = () => {
   const { id } = useParams();
   const { data: article } = useGetArticleById(id);
   const { data: coinData } = useGetCoinDetail(article?.article?.ca);
+  const { isConnected } = useAccount();
 
   const coinInfo = useMemo(
     () => ({
@@ -184,7 +158,7 @@ const DetailArticle = () => {
         article={article.article}
         coinData={coinInfo}
       />
-      <CommentsSection />
+      {isConnected && <CommentsSection />}
     </div>
   );
 };

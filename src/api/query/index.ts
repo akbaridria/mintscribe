@@ -2,11 +2,17 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createNewArticle,
   getAllCategories,
+  getAllCommentsFromArticle,
+  getAllLikesFromArticle,
   getArticleById,
   getCoinDetail,
+  getIsUserLikes,
   getListOfArticlesByAddress,
   getTopLikes,
   getUserDetail,
+  insertLikes,
+  publishComment,
+  removeLikes,
   updateArticle,
   updateUserDetail,
   uploadImage,
@@ -18,7 +24,7 @@ import {
   getTopLikesKeys,
   getUserDetailKeys,
 } from "../constant/query-keys";
-import type { IArticle, User, UserDetail } from "@/types";
+import type { Comment, IArticle, User, UserDetail } from "@/types";
 
 export const useGetUserDetailByAddress = (address?: string) =>
   useQuery<UserDetail, Error>({
@@ -85,4 +91,62 @@ export const useGetCoinDetail = (address?: string) =>
       return getCoinDetail(address);
     },
     enabled: !!address,
+  });
+
+export const useGetAllLikesFromArticle = (id?: string) =>
+  useQuery<{ totalLikes: number }, Error>({
+    queryKey: ["likes", id],
+    queryFn: () => getAllLikesFromArticle(id || ""),
+    enabled: !!id,
+  });
+
+export const useAddLikes = () =>
+  useMutation<
+    { success: boolean },
+    Error,
+    { id: string; wallet_address?: string }
+  >({
+    mutationKey: [],
+    mutationFn: ({ id, wallet_address }) =>
+      insertLikes(id, wallet_address || ""),
+  });
+
+export const useRemoveLikes = () =>
+  useMutation<
+    { success: boolean },
+    Error,
+    { id: string; wallet_address?: string }
+  >({
+    mutationKey: [],
+    mutationFn: ({ id, wallet_address }) =>
+      removeLikes(id, wallet_address || ""),
+  });
+
+export const useGetIsUserLikes = (id: string, wallet_address: string) =>
+  useQuery<{ isLiked: boolean }, Error>({
+    queryKey: ["user-likes", wallet_address, id],
+    queryFn: () => getIsUserLikes(id, wallet_address),
+    enabled: !!id && !!wallet_address,
+  });
+
+export const useGetCommentFromArticle = (id: string) =>
+  useQuery<Comment[], Error>({
+    queryKey: ["comment", id],
+    queryFn: () => getAllCommentsFromArticle(id),
+    enabled: !!id,
+  });
+
+export const usePublishComment = () =>
+  useMutation<
+    { success: boolean },
+    Error,
+    { id: string; wallet_address: string; content: string }
+  >({
+    mutationKey: [],
+    mutationFn: ({ id, content, wallet_address }) =>
+      publishComment({
+        article_id: id,
+        author_wallet_address: wallet_address,
+        content: content,
+      }),
   });
