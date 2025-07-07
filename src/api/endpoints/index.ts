@@ -1,7 +1,7 @@
 import type { IArticle, User } from "@/types";
 import { apiClient } from "../client";
 import { getCoin } from "@zoralabs/coins-sdk";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 
 const getUserDetail = async (address: string) =>
   apiClient()
@@ -71,7 +71,7 @@ const getListArticles = async (
 const getCoinDetail = async (address: string) => {
   const data = await getCoin({
     address: address,
-    chain: baseSepolia.id,
+    chain: base.id,
   });
   return data.data?.zora20Token;
 };

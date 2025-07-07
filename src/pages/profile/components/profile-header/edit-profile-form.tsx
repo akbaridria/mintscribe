@@ -205,7 +205,7 @@ export function EditProfileForm({
           <Separator />
 
           <div className="flex items-center gap-3">
-            <Button type="submit" className="bg-green-600 hover:bg-green-700">
+            <Button type="submit">
               Save Changes
             </Button>
             <Button type="button" variant="outline" onClick={onCancel}>

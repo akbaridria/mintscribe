@@ -13,12 +13,15 @@ import {
 import { Link } from "react-router-dom";
 import { formatAddress, formatNumber } from "@/lib/utils";
 import { useGetUserDetailByAddress } from "@/api/query";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { address } = useAccount();
-  const { data, isLoading } = useGetUserDetailByAddress(address?.toLowerCase() || "");
+  const { disconnect } = useDisconnect();
+  const { data, isLoading } = useGetUserDetailByAddress(
+    address?.toLowerCase() || ""
+  );
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -140,7 +143,10 @@ const ProfileDropdown = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="cursor-pointer mx-1 my-0.5 py-2.5 rounded-sm">
+        <DropdownMenuItem
+          className="cursor-pointer mx-1 my-0.5 py-2.5 rounded-sm"
+          onClick={() => disconnect()}
+        >
           <LogOut className="w-4 h-4 mr-3 text-red-500" />
           <span className="text-red-500">Logout</span>
         </DropdownMenuItem>

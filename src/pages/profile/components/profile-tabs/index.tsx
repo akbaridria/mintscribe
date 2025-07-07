@@ -30,7 +30,9 @@ export function ProfileTabs({ user }: ProfileTabsProps) {
       </TabsContent>
 
       <TabsContent value="likes" className="mt-6">
-        <ListArticleTab />
+        <div className="text-center text-muted-foreground">
+          No likes yet.
+        </div>
       </TabsContent>
     </Tabs>
   );

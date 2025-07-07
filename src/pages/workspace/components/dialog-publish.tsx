@@ -35,7 +35,7 @@ import {
   setApiKey,
 } from "@zoralabs/coins-sdk";
 import { parseEther, type Address } from "viem";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
@@ -293,8 +293,8 @@ export default function CoinCreationModal() {
         ...metadataParameters,
         payoutRecipient: (formData.payoutRecipient || address) as Address,
         owners: [address as Address],
-        currency: DeployCurrency.ETH,
-        chainId: baseSepolia.id,
+        currency: DeployCurrency.ZORA,
+        chainId: base.id,
         initialPurchase: {
           currency: InitialPurchaseCurrency.ETH,
           amount: parseEther(formData.initialPurchaseAmount),

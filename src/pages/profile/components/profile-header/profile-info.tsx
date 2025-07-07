@@ -68,7 +68,7 @@ export function ProfileInfo({
       <div className="flex items-center gap-6 text-sm">
         <span>
           <strong className="text-foreground">
-            {userDetail?.total_articles || 0}
+            {userDetail?.total_followers || 0}
           </strong>{" "}
           <span className="text-muted-foreground">Followers</span>
         </span>
@@ -80,7 +80,7 @@ export function ProfileInfo({
         </span>
         <span>
           <strong className="text-foreground">
-            {userDetail?.total_followers || 0}
+            {userDetail?.total_articles || 0}
           </strong>{" "}
           <span className="text-muted-foreground">Articles</span>
         </span>

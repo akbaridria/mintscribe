@@ -12,8 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ICoinData } from "@/types";
-import { Coins, Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { Coins, Check, Copy, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ZORA_API_KEY } from "@/config";
+import { setApiKey, tradeCoin } from "@zoralabs/coins-sdk";
+import { parseEther } from "viem";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { toast } from "sonner";
 
 interface DialogBuyCoinProps {
   coinData: ICoinData;
@@ -22,6 +27,14 @@ interface DialogBuyCoinProps {
 const DialogBuyCoin: React.FC<DialogBuyCoinProps> = ({ coinData }) => {
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [purchaseAmount, setPurchaseAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { address } = useAccount();
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+
+  useEffect(() => {
+    setApiKey(ZORA_API_KEY);
+  }, []);
 
   const handleCopyAddress = async () => {
     try {
@@ -30,6 +43,50 @@ const DialogBuyCoin: React.FC<DialogBuyCoinProps> = ({ coinData }) => {
       setTimeout(() => setCopiedAddress(false), 2000);
     } catch (err) {
       console.error("Failed to copy address:", err);
+    }
+  };
+
+  const handlePurchase = async () => {
+    if (!walletClient || !address || !coinData.address || !publicClient) {
+      toast.error("Wallet connection required");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const amountToBuy = parseEther(purchaseAmount);
+
+      const tradeParameters = {
+        sell: { type: "eth" as const },
+        buy: {
+          type: "erc20" as const,
+          address: coinData.address as `0x${string}`,
+        },
+        amountIn: amountToBuy,
+        slippage: 0.05,
+        sender: address,
+      };
+
+      const toastId = toast.loading(`Purchasing ${coinData.symbol} tokens...`);
+
+      await tradeCoin({
+        tradeParameters,
+        walletClient,
+        account: walletClient.account,
+        publicClient,
+      });
+
+      toast.dismiss(toastId);
+      toast.success(`Successfully purchased ${coinData.symbol} tokens!`);
+      setPurchaseAmount("");
+    } catch (error) {
+      console.error("Purchase error:", error);
+
+      toast.dismiss();
+      toast.error("Failed to purchase tokens");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -107,9 +164,9 @@ const DialogBuyCoin: React.FC<DialogBuyCoinProps> = ({ coinData }) => {
                 step="0.01"
                 className="text-lg font-medium pr-20 py-3 border-gray-300 focus:border-gray-400 focus:ring-0 rounded-lg"
               />
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+              <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
                 <span className="text-sm font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  ${coinData?.symbol}
+                  ETH
                 </span>
               </div>
             </div>
@@ -120,12 +177,19 @@ const DialogBuyCoin: React.FC<DialogBuyCoinProps> = ({ coinData }) => {
 
           <div className="pt-4">
             <Button
+              onClick={handlePurchase}
               disabled={
-                !purchaseAmount || Number.parseFloat(purchaseAmount) <= 0
+                !purchaseAmount ||
+                Number.parseFloat(purchaseAmount) <= 0 ||
+                isLoading
               }
               className="w-full py-3 text-base font-semibold bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 transition-all duration-200 rounded-lg"
             >
-              Purchase ${coinData?.symbol} Tokens
+              {isLoading ? (
+                <Loader2 className="animate-spin h-5 w-5 mr-3" />
+              ) : (
+                `Purchase ${coinData?.symbol} Tokens`
+              )}
             </Button>
             <p className="text-xs text-gray-500 text-center mt-3">
               By purchasing, you support the creator.
