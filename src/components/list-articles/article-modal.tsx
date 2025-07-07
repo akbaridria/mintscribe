@@ -93,7 +93,7 @@ export function ArticleModal({ article, isOpen, onClose }: ArticleModalProps) {
                     <div>•</div>
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 mr-1" />
-                      {article.readTime}
+                      {article.read_time}
                     </div>
                   </div>
                 </div>
