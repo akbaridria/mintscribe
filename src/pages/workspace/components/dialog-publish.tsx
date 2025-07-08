@@ -392,7 +392,7 @@ export default function CoinCreationModal() {
 
   const handleOpenChange = useCallback(
     (newOpen: boolean) => {
-      if (!newOpen && transactionState.isProcessing) {
+      if (!newOpen && (transactionState.isProcessing || transactionState.isSuccess)) {
         return;
       }
       setOpen(newOpen);
@@ -400,7 +400,7 @@ export default function CoinCreationModal() {
         resetForm();
       }
     },
-    [transactionState.isProcessing, resetForm]
+    [transactionState.isProcessing, transactionState.isSuccess, resetForm]
   );
 
   const getStepIcon = (step: Step, index: number) => {

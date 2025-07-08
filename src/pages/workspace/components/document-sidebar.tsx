@@ -42,7 +42,7 @@ export function DocumentSidebar() {
 
   const handleCreateNew = useCallback(async () => {
     try {
-      const newArticle = await mutateAsync({ wallet_address: address || "" });
+      const newArticle = await mutateAsync({ wallet_address: address?.toLowerCase() || "" });
       if (newArticle && newArticle.id) {
         refetchListOfArticles();
         navigate(`/workspace/${newArticle.id}`);
