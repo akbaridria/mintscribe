@@ -1,5 +1,7 @@
 # MintScribe ✍️💰
 
+> **<ins>🚀 NOW LIVE ON BASE MAINNET! 🚀</ins>**
+
 > **Quick Links:**  
 > [Mintscribe Backend Service](https://github.com/akbaridria/mintscribe-backend)
 

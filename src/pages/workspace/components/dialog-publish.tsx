@@ -138,7 +138,7 @@ export default function CoinCreationModal() {
       } else if (error.message.toLowerCase().includes("nonce")) {
         return "Transaction nonce error. Please refresh the page and try again.";
       } else {
-        return "The contract deployment failed. This could be due to network congestion on Base Sepolia or an issue with the Zora protocol. Please try again in a few minutes.";
+        return "The contract deployment failed. This could be due to network congestion on Base Mainnet or an issue with the Zora protocol. Please try again in a few minutes.";
       }
     }
     return error?.message || "Unknown error occurred during contract operation";
@@ -574,7 +574,7 @@ export default function CoinCreationModal() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Network</p>
-                      <p className="font-medium">Base Sepolia</p>
+                      <p className="font-medium">Base Mainnet</p>
                     </div>
                   </div>
                 </div>
