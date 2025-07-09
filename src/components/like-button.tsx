@@ -12,9 +12,10 @@ import { useAccount } from "wagmi";
 
 interface LikeButtonProps {
   id: string;
+  disabled?: boolean;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ id }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ id, disabled = false }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const { address } = useAccount();
@@ -53,7 +54,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ id }) => {
         active={isLiked}
         onClick={handleLikes}
         color={[231, 0, 11]}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
       />
 
       <span

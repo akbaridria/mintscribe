@@ -26,6 +26,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
   user,
   coinData,
 }) => {
+  const { address } = useAccount();
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -123,7 +124,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
 
       <div className="py-4 mb-8">
         <div className="flex items-center justify-end">
-          <LikeButton id={article?.id} />
+          <LikeButton id={article?.id} disabled={!address} />
         </div>
       </div>
     </div>
